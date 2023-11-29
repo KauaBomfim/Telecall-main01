@@ -29,6 +29,6 @@
     else
     {
         // Não acessa
-        header('Location: ../HTML/loginTele.html');
+        header('Location: ../HTML/loginTele.php');
     }
 ?>

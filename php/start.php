@@ -9,7 +9,7 @@
         unset($_SESSION['adm']);
         unset($_SESSION['nome']);
         unset($_SESSION['celular']);
-        header('location: loginTele.html');
+        header('location: loginTele.php');
 
     } else{
         $logado = $_SESSION['login'];

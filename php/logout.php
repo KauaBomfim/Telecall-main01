@@ -5,7 +5,7 @@
     unset($_SESSION["senha"]);
     unset($_SESSION["tipo"]);
     session_destroy();
-    header("location: ../HTML/loginTele.html");
+    header("location: ../HTML/loginTele.php");
     exit;
     
 ?>

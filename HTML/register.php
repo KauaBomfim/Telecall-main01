@@ -148,7 +148,7 @@ if(isset($_POST['cadastrarUser'])){
 
         <div style="text-align: center;"><span id="span_cad">Cadastrando Usuário...</span></div>
 
-        <p>Já tem uma conta? <a href="loginTele.html">Login</a></p>
+        <p>Já tem uma conta? <a href="loginTele.php">Login</a></p>
     </form>
 
 

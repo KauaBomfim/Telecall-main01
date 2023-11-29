@@ -12,7 +12,7 @@ function autenticado() {
 
 function usuario() {
     if (autenticado()) {
-        return lerUsuarios($_SESSION['id']);
+        return lerUsuario($_SESSION['id']);
     } else {
         return false;
     }

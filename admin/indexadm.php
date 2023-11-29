@@ -3,10 +3,6 @@
 
 require_once('../layout/header.php');
 
-$usuarios = lerTodosUsuarios(); 
-
-
-include_once('../php/config.php');
 // print_r($_SESSION);
 if((!isset($_SESSION['login']) == true) and (!isset($_SESSION['senha']) == true))
 {
@@ -18,7 +14,7 @@ $logado = $_SESSION['login'];
 if(!empty($_GET['search']))
 {
     $data = $_GET['search'];
-    $sql = "SELECT * FROM usuarios WHERE id LIKE '%$data%' or nome LIKE '%$data%' or email LIKE '%$data%' ORDER BY id DESC";
+    $sql = "SELECT * FROM usuarios WHERE id LIKE '%$data%' or nome LIKE '%$data%' or login LIKE '%$data%' ORDER BY id DESC";
 }
 else
 {
@@ -113,3 +109,18 @@ $result = $conexao->query($sql);
         </div>
     </section>
 </main>
+<script>
+    var search = document.getElementById('pesquisar');
+
+    search.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") 
+        {
+            searchData();
+        }
+    });
+
+    function searchData()
+    {
+        window.location = 'indexadm.php?search='+search.value;
+    }
+</script>
