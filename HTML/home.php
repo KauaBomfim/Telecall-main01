@@ -353,5 +353,8 @@ include('../layout/header.php');
 include('../layout/footer.php');
 ?>
         </main>
+        <script src="../js/swiper-bundle.min.js" defer></script>
+        <script src="../js/slider.js" defer></script>
+        <script src="../js/darkmode.js" defer></script>
     </body>
 </html>

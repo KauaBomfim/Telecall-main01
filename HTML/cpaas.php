@@ -206,5 +206,6 @@ include('../layout/headercpaas.php');
             include('../layout/footercpaas.php');
         ?>
         </main>
+        <script src="../js/darkmode.js" defer></script>
     </body>
 </html>

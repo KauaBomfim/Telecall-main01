@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 27/10/2023 às 01:47
+-- Tempo de geração: 29/11/2023 às 22:27
 -- Versão do servidor: 10.4.28-MariaDB
 -- Versão do PHP: 8.2.4
 
@@ -37,18 +37,19 @@ CREATE TABLE `usuarios` (
   `celular` varchar(20) NOT NULL,
   `telefoneFixo` varchar(20) NOT NULL,
   `endereco` varchar(255) NOT NULL,
-  `login` varchar(6) NOT NULL,
-  `senha` varchar(8) NOT NULL,
-  `tipo` char(1) NOT NULL
+  `login` varchar(20) NOT NULL,
+  `senha` varchar(20) NOT NULL,
+  `adm` char(1) NOT NULL,
+  `dono` char(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `usuarios`
 --
 
-INSERT INTO `usuarios` (`id`, `nome`, `nomeMaterno`, `dataNasc`, `sexo`, `cpf`, `celular`, `telefoneFixo`, `endereco`, `login`, `senha`, `tipo`) VALUES
-(4, 'Kauã Silva Bomfim', 'Kauã Silva Bomfim', '2003-04-03', 'Masculino', '132.323.204-33', '(21) 97885-4322', '(21) 9788-5432', 'Rua Sul york 0000,casa - Bangu', 'kauabo', '02020202', ''),
-(24, 'Yasmin Silva Bomfim', 'Yasmin Silva Bomfim', '2003-04-03', 'Feminino', '152.747.020-93', '(21) 99885-7032', '(21) 9988-5703', 'rua frança 33 - bangu', 'yasyas', '03030303', '');
+INSERT INTO `usuarios` (`id`, `nome`, `nomeMaterno`, `dataNasc`, `sexo`, `cpf`, `celular`, `telefoneFixo`, `endereco`, `login`, `senha`, `adm`, `dono`) VALUES
+(4, 'Kauã Silva Bomfim', 'Kauã Silva Bomfim', '2003-04-03', '', '132.323.204-33', '', '(21) 9788-5432', 'Rua Sul América 8821', 'moitaOFC', 'ksksksks', '1', '1'),
+(129, 'marcos', 'carmem lucia de souza', '1969-12-03', '', '354.232.342-34', '', '(21) 5343-2423', 'Rua', 'msbsir', 'msmsmsms', '', '');
 
 --
 -- Índices para tabelas despejadas
@@ -68,7 +69,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=143;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

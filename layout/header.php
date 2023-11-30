@@ -20,8 +20,8 @@ $usuarios = lerTodosUsuarios();
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <link rel="stylesheet" href="../CSS/home.css"/>
         <link rel="stylesheet" href="../CSS/swiper-bundle.min.css"/>
-        <script src="../js/swiper-bundle.min.js" defer></script>
         <script src="../js/script.js" defer></script>
+
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
         <title>Site Oficial - Telecall</title>
     </head>
@@ -129,7 +129,7 @@ $usuarios = lerTodosUsuarios();
                 </div>
             </nav>
 
-            <div class="btn-user" onclick="toggleMenuProfile()">      <!--Butão da área do cliente-->
+            <div class="btn-user">      <!--Butão da área do cliente-->
 
                     <button id="btn-cliente" name="btn-cliente"><i class="fa-solid fa-user"></i><p>
                     <?php

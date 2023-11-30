@@ -1,7 +1,7 @@
 <?php
 
 
-require_once('../layout/header.php');
+include('../layout/header.php');
 
 // print_r($_SESSION);
 if((!isset($_SESSION['login']) == true) and (!isset($_SESSION['senha']) == true))

@@ -35,5 +35,6 @@ include('../layout/header.php');
         <?php 
             include('../layout/footer.php');
         ?>
+        <script src="../js/darkmode.js" defer></script>
     </body>
 </html>

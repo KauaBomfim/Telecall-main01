@@ -210,5 +210,6 @@ include('../php/start.php');
                 <p>Copyright &#169 2018 Telecall. Todos os direitos reservados.</p>
             </div>
         </footer>
+        <script src="../js/darkmode.js" defer></script>
     </body>
 </html>
