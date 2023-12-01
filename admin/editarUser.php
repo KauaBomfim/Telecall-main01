@@ -1,11 +1,18 @@
 <?php
-    include_once('../php/config.php');
 
     if(!empty($_GET['id']))
     {
+        include_once('../php/config.php');
+        
         $id = $_GET['id'];
-        $sqlSelect = "SELECT * FROM usuarios WHERE id=$id";
-        $result = $conexao->query($sqlSelect);
+
+        // Usando prepared statement para evitar SQL injection
+        $sqlSelect = "SELECT * FROM usuarios WHERE id=?";
+        $stmt = $conexao->prepare($sqlSelect);
+        $stmt->bind_param("i", $id); // "i" indica que $id é um inteiro
+        $stmt->execute();
+        $result = $stmt->get_result();
+
         if($result->num_rows > 0)
         {
             while($user_data = mysqli_fetch_assoc($result))
@@ -24,11 +31,14 @@
         {
             header('Location: ../admin/indexadm.php');
         }
+
+        $stmt->close(); // Fechar a declaração preparada
     }
     else
     {
         header('Location: ../admin/indexadm.php');
     }
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-bt">
@@ -36,7 +46,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulário | GN</title>
+    <title> Site oficial - Criar Usuário</title>
     <style>
         body{
             font-family: Arial, Helvetica, sans-serif;
@@ -112,6 +122,7 @@
     </style>
 </head>
 <body>
+    <a href="../admin/indexadm.php">Voltar</a>
     <div class="box">
         <form action="../php/saveEdit.php" method="POST">
             <fieldset>
@@ -123,10 +134,10 @@
                 </div>
                 <br>
                 <label for="data_nascimento"><b>Data de Nascimento:</b></label>
-                <input type="date" name="data_nascimento" id="data_nascimento" value=<?php echo $dataNasc;?> required>
+                <input type="date" name="dataNasc" id="dataNasc" value=<?php echo $dataNasc;?> required>
                 <br><br><br>
                 <div class="inputBox">
-                    <input type="text" name="senha" id="senha" class="inputUser" value=<?php echo $senha;?> required>
+                    <input type="password" name="senha" id="senha" class="inputUser" value=<?php echo $senha;?> required>
                     <label for="senha" class="labelInput">Senha</label>
                 </div>
                 <br><br>
@@ -136,18 +147,18 @@
                 </div>
                 <br><br>
                 <div class="inputBox">
-                    <input type="text" name="celular" id="celular" class="inputUser" value=<?php echo $celular;?> required>
+                    <input type="text" name="celular" id="celular" class="inputUser" value=<?php echo $celular;?>>
                     <label for="celular" class="labelInput">Celular</label>
                 </div>
                 <br>
                 <p>Sexo:</p>
-                <input type="radio" id="feminino" name="genero" value="feminino" <?php echo ($sexo == 'feminino') ? 'checked' : '';?> required>
+                <input type="radio" id="feminino" name="sexo" value="feminino" <?php echo ($sexo == 'feminino') ? 'checked' : '';?> required>
                 <label for="feminino">Feminino</label>
                 <br>
-                <input type="radio" id="masculino" name="genero" value="masculino" <?php echo ($sexo == 'masculino') ? 'checked' : '';?> required>
+                <input type="radio" id="masculino" name="sexo" value="masculino" <?php echo ($sexo == 'masculino') ? 'checked' : '';?> required>
                 <label for="masculino">Masculino</label>
                 <br>
-                <input type="radio" id="outro" name="genero" value="outro" <?php echo ($sexo == 'outro') ? 'checked' : '';?> required>
+                <input type="radio" id="outro" name="sexo" value="outro" <?php echo ($sexo == 'outro') ? 'checked' : '';?> required>
                 <label for="outro">Outro</label>
                 <br><br>
                 <br>

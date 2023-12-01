@@ -1,3 +1,64 @@
+<?php
+session_start();
+include_once('../php/config.php');
+
+$sql = "SELECT nomeMaterno, dataNasc, endereco FROM usuarios";
+
+$questionsAndAnswers = array();
+$result = $conexao->query($sql);
+$index = 0;
+
+if ($result->num_rows > 0) {
+    // Obter cada linha da consulta
+    while ($row = $result->fetch_assoc()) {
+        // Adicionar pergunta e resposta ao array
+        $questionsAndAnswers[$index]['pergunta'] = 'Qual o nome da sua mãe?';
+        $questionsAndAnswers[$index]['resposta'] = $row['nomeMaterno'];
+        $index++;
+    
+        $questionsAndAnswers[$index]['pergunta'] = 'Qual a data do seu nascimento?';
+        $questionsAndAnswers[$index]['resposta'] = $row['dataNasc'];
+        $index++;
+    
+        $questionsAndAnswers[$index]['pergunta'] = 'Qual o CEP do seu endereço?';
+        $questionsAndAnswers[$index]['resposta'] = $row['endereco'];
+        $index++;
+    }
+} else {
+    echo "Nenhum resultado encontrado na tabela";
+}
+// Inicializa ou recupera as respostas armazenadas em uma sessão
+
+if (!isset($_SESSION['login'])) {
+    $_SESSION['login'] = array();
+}
+
+// Verifica se o formulário foi enviado
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Verifica as respostas
+    $isValid = true;
+
+    foreach ($questionsAndAnswers as $entry) {
+        $userAnswer = isset($_POST[$entry['pergunta']]) ? $_POST[$entry['pergunta']] : '';
+
+        if ($userAnswer !== $entry['resposta']) {
+            $isValid = false;
+            break;
+        }
+    }
+
+    // Se as respostas são válidas, o usuário está autenticado
+    if ($isValid) {
+        ob_clean();
+        header('Location: home.php');
+        exit();
+    } else {
+        // Se as respostas não são válidas, exibe uma mensagem de erro
+        echo "Respostas incorretas. Tente novamente.";
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -69,7 +130,7 @@
 </head>
 <body>
     <main>              <!-- Main - Form -->
-        <form id="two-factor-form">
+        <form id="two-factor-form" method="$_POST" action="">
             <h2 style="color: #ff3333; text-align: center;">Autenticação de Dois Fatores (2FA)</h2>
             <section id="motherNameSection">
                 <label for="motherName">Qual o nome da sua mãe?</label>
@@ -87,7 +148,7 @@
                 <span class="error-message" id="addressZipError">Por favor, preencha este campo com um CEP válido (XXXXX-XXX).</span>
             </section>
             <button type="button" id="nextQuestion" onclick="showNextQuestion()">Próxima Pergunta</button>
-            <button id="authenticateButton" type="button" onclick="authenticate()">Autenticar</button>
+            <button id="authenticateButton" name="authenticateButton" type="submit" onclick="authenticate()">Autenticar</button>
         </form>
     </main>
 

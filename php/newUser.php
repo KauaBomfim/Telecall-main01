@@ -11,6 +11,8 @@
         $endereco = $_POST['endereco'];
         $login = $_POST['login'];
         $senha = $_POST['senha'];
+
+        $isAdmin = isset($_POST['isAdmin']) ? 1 : 0;
     }
 
     $dbHost = 'Localhost';
@@ -29,9 +31,8 @@
         die("Conexão falhou!" . mysqli_connect_error());
     }
 
-    $result = mysqli_query($conexao, "INSERT INTO usuarios(nome, nomeMaterno, dataNasc, sexo, cpf, celular, telefoneFixo, endereco, login, senha)
-    VALUES ('$nome', '$nomeMat', '$dataNasc', '$sexo', '$cpf', '$celular', '$telefone', '$endereco', '$login', '$senha')");
+    $result = mysqli_query($conexao, "INSERT INTO usuarios(nome, nomeMaterno, dataNasc, sexo, cpf, celular, telefoneFixo, endereco, login, senha, adm)
+    VALUES ('$nome', '$nomeMat', '$dataNasc', '$sexo', '$cpf', '$celular', '$telefone', '$endereco', '$login', '$senha', '$isAdmin')");
 
-    header('location: ../admin/indexadm.php');
-
+header('Location: ../admin/indexadm.php');
 ?>

@@ -146,7 +146,7 @@ if(isset($_POST['cadastrarUser'])){
 
         <div>
         <label for="isAdmin">Administrador:</label>
-        <input type="checkbox" id="isAdmin" name="isAdmin">
+        <input type="checkbox" id="isAdmin" name="isAdmin"">
         </div>
 
         <button type="submit" name="cadastrarUser">Criar Usuário</button>

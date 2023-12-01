@@ -1,41 +1,59 @@
 <?php
-    include_once('../php/config.php');
 
-    if(!empty($_GET['id']))
+session_start();
+
+if (isset($_SESSION['login'])) 
     {
-        $id = $_GET['id'];
+        $login_usuario = $_SESSION['login'];
+        include_once('../php/config.php');
 
         // Usando prepared statement para evitar SQL injection
-        $sqlSelect = "SELECT * FROM usuarios WHERE id=?";
+        $sqlSelect = "SELECT * FROM usuarios WHERE login = ?";
         $stmt = $conexao->prepare($sqlSelect);
-        $stmt->bind_param("i", $id); // "i" indica que $id é um inteiro
+        $stmt->bind_param("s", $login_usuario); // "s" indica que $login_usuario é uma string
         $stmt->execute();
         $result = $stmt->get_result();
 
         if($result->num_rows > 0)
         {
-            while($user_data = mysqli_fetch_assoc($result))
-            {
-                $nome = $user_data['nome'];
-                $dataNasc = $user_data['dataNasc'];
-                $sexo = $user_data['sexo'];
-                $cpf = $user_data['cpf'];
-                $celular = $user_data['celular'];
-                $endereco = $user_data['endereco'];
-                $login = $user_data['login'];
-                $senha = $user_data['senha'];
-            }
-        }
-        else
-        {
-            header('Location: ../admin/indexadm.php');
+            $user_perfil = $result->fetch_assoc();
+
+            $nome_atual = $user_perfil['nome'];
+            $dataNasc_atual = $user_perfil['dataNasc'];
+            $sexo_atual = $user_perfil['sexo'];
+            $cpf_atual = $user_perfil['cpf'];
+            $celular_atual = $user_perfil['celular'];
+            $endereco_atual = $user_perfil['endereco'];
+            $login_atual = $user_perfil['login'];
+            $senha_atual = $user_perfil['senha'];
+
+            $stmt->close(); // Fechar a declaração preparada
+        } else {
+            echo "Erro ao obter dados do perfil";
+            exit();
         }
 
-        $stmt->close(); // Fechar a declaração preparada
-    }
-    else
-    {
-        header('Location: ../admin/indexadm.php');
+        if(isset($_POST['update_dados']))
+        {
+            $novo_nome = $_POST['novo_nome'];
+            $novo_login = $_POST['novo_login'];
+            $novo_senha = $_POST['novo_senha'];
+            $novo_celular = $_POST['novo_celular'];
+            $novo_sexo = $_POST['novo_sexo'];
+            $novo_dataNasc = $_POST['novo_dataNasc'];
+            $novo_endereco = $_POST['novo_endereco'];
+            
+            $sqlUpdate = "UPDATE usuarios SET nome= ?, senha= ? ,celular= ? ,sexo= ? ,dataNasc= ? ,endereco= ?, login= ?";
+            $stmt = $conexao->prepare($sqlUpdate);
+            $stmt->bind_param("sssssss", $novo_nome, $novo_senha, $novo_celular, $novo_sexo, $novo_dataNasc, $novo_endereco, $novo_login);
+            $stmt->execute();
+    
+            $stmt->close();
+    
+            header('Location: ../HTML/home.php');
+            exit();
+        }
+
     }
 
 ?>
@@ -45,7 +63,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Site oficial - Criar Usuário</title>
+    <title> Site oficial - Editar dados</title>
     <style>
         body{
             font-family: Arial, Helvetica, sans-serif;
@@ -121,54 +139,54 @@
     </style>
 </head>
 <body>
-    <a href="../admin/indexadm.php">Voltar</a>
+    <a href="../html/home.php">Voltar</a>
     <div class="box">
-        <form action="../php/saveEdit.php" method="POST">
+        <form action="" method="POST">
             <fieldset>
                 <legend><b>Editar Cliente</b></legend>
                 <br>
                 <div class="inputBox">
-                    <input type="text" name="nome" id="nome" class="inputUser" value=<?php echo $nome;?> required>
+                    <input type="text" name="novo_nome" id="novo_nome" class="inputUser" value=<?php echo $nome_atual;?> required>
                     <label for="nome" class="labelInput">Nome completo</label>
                 </div>
                 <br>
                 <label for="data_nascimento"><b>Data de Nascimento:</b></label>
-                <input type="date" name="dataNasc" id="dataNasc" value=<?php echo $dataNasc;?> required>
+                <input type="date" name="novo_dataNasc" id="novo_dataNasc" value=<?php echo $dataNasc_atual;?> required>
                 <br><br><br>
                 <div class="inputBox">
-                    <input type="password" name="senha" id="senha" class="inputUser" value=<?php echo $senha;?> required>
+                    <input type="password" name="novo_senha" id="novo_senha" class="inputUser" value=<?php echo $senha_atual;?> required>
                     <label for="senha" class="labelInput">Senha</label>
                 </div>
                 <br><br>
                 <div class="inputBox">
-                    <input type="text" name="login" id="login" class="inputUser" value=<?php echo $login;?> required>
+                    <input type="text" name="novo_login" id="novo_login" class="inputUser" value=<?php echo $login_atual;?> required>
                     <label for="login" class="labelInput">Login</label>
                 </div>
                 <br><br>
                 <div class="inputBox">
-                    <input type="text" name="celular" id="celular" class="inputUser" value=<?php echo $celular;?> required>
+                    <input type="text" name="novo_celular" id="novo_celular" class="inputUser" value=<?php echo $celular_atual;?>>
                     <label for="celular" class="labelInput">Celular</label>
                 </div>
                 <br>
                 <p>Sexo:</p>
-                <input type="radio" id="feminino" name="sexo" value="feminino" <?php echo ($sexo == 'feminino') ? 'checked' : '';?> required>
+                <input type="radio" id="feminino" name="novo_sexo" value="feminino" required>
                 <label for="feminino">Feminino</label>
                 <br>
-                <input type="radio" id="masculino" name="sexo" value="masculino" <?php echo ($sexo == 'masculino') ? 'checked' : '';?> required>
+                <input type="radio" id="masculino" name="novo_sexo" value="masculino" required>
                 <label for="masculino">Masculino</label>
                 <br>
-                <input type="radio" id="outro" name="sexo" value="outro" <?php echo ($sexo == 'outro') ? 'checked' : '';?> required>
+                <input type="radio" id="outro" name="novo_sexo" value="outro" required>
                 <label for="outro">Outro</label>
                 <br><br>
                 <br>
                 <br>
                 <div class="inputBox">
-                    <input type="text" name="endereco" id="endereco" class="inputUser" value=<?php echo $endereco;?> required>
+                    <input type="text" name="novo_endereco" id="novo_endereco" class="inputUser" value=<?php echo $endereco_atual;?> required>
                     <label for="endereco" class="labelInput">Endereço</label>
                 </div>
                 <br><br>
-				<input type="hidden" name="id" value=<?php echo $id;?>>
-                <input type="submit" name="update" id="submit">
+				<input type="hidden">
+                <input type="submit" name="update_dados" id="submit">
             </fieldset>
         </form>
     </div>

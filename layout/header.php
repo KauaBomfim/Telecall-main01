@@ -1,10 +1,32 @@
 <?php 
 include('../php/start.php');
-require_once('../php/config.php');
+include_once('../php/config.php');
 require_once('../basedados/repositorio-usuario.php');
 
 
-$usuarios = lerTodosUsuarios();
+
+if (isset($_SESSION['login'])) {
+    $login_usuario = $_SESSION['login'];
+
+    // Consulta para obter o valor do campo 'adm' para o usuário logado
+    $query = "SELECT adm FROM usuarios WHERE login = '$login_usuario'";
+
+    $resultado = $conexao->query($query);
+
+    // Verifica se a consulta foi bem-sucedida
+    if ($resultado) {
+        // Obtém os dados da consulta
+        $row = $resultado->fetch_assoc();
+
+     // Libera o resultado da consulta
+        $resultado->free();
+    } else {
+        // Se a consulta falhou, exibe o erro
+        echo "Erro na consulta: " . $mysqli->error;
+    }
+} else {
+    echo "Usuário não está logado";
+}
 
 ?>
 
@@ -99,7 +121,7 @@ $usuarios = lerTodosUsuarios();
                         <div class="user-info">
                         </div>
 
-                        <a href='../HTML/editarUser.php?id=$user_data[id]' class="sub-menu-link">
+                        <a href='../HTML/editarPerfil.php' class="sub-menu-link">
                             <i class="fa-solid fa-user"></i>
                             <p>Editar perfil</p>
                             <span>></span>
@@ -110,14 +132,12 @@ $usuarios = lerTodosUsuarios();
                             <span>></span>
                         </a>
                         <?php 
-                        foreach ($usuarios as $usuario) {
-                        if ($usuario['adm'] == '1') {
+                        if ($row['adm'] == 1 ) {
                             echo '<a href="../admin/indexadm.php" class="sub-menu-link">
                             <i class="fa-solid fa-key"></i>
                             <p>Painel administrativo</p>
                             <span>></span>';
                         }
-                    }
                         ?>
                         </a>
                         <a href="../php/logout.php" class="sub-menu-link">

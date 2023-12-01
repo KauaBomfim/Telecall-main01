@@ -7,8 +7,8 @@
         $nome = $_POST['nome'];
         $login = $_POST['login'];
         $senha = $_POST['senha'];
-        $telefone = $_POST['telefone'];
-        $sexo = $_POST['genero'];
+        $celular = $_POST['celular'];
+        $sexo = $_POST['sexo'];
         $dataNasc = $_POST['dataNasc'];
         $endereco = $_POST['endereco'];
         
@@ -18,6 +18,6 @@
         $result = $conexao->query($sqlInsert);
         print_r($result);
     }
-    header('Location: ../admin/indexadm.php');
+    header('Location: ../HTML/home.php');
 
 ?>
