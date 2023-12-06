@@ -2,28 +2,26 @@
 session_start();
 include_once('../php/config.php');
 
-$sql = "SELECT nomeMaterno, dataNasc, endereco FROM usuarios";
+$sql = "SELECT nomeMaterno, DATE_FORMAT(dataNasc, '%Y-%m-%d') as dataNasc, endereco FROM usuarios";
 
 $questionsAndAnswers = array();
 $result = $conexao->query($sql);
-$index = 0;
 
 if ($result->num_rows > 0) {
     // Obter cada linha da consulta
     while ($row = $result->fetch_assoc()) {
-        // Adicionar pergunta e resposta ao array
-        $questionsAndAnswers[$index]['pergunta'] = 'Qual o nome da sua mãe?';
-        $questionsAndAnswers[$index]['resposta'] = $row['nomeMaterno'];
-        $index++;
-    
-        $questionsAndAnswers[$index]['pergunta'] = 'Qual a data do seu nascimento?';
-        $questionsAndAnswers[$index]['resposta'] = $row['dataNasc'];
-        $index++;
-    
-        $questionsAndAnswers[$index]['pergunta'] = 'Qual o CEP do seu endereço?';
-        $questionsAndAnswers[$index]['resposta'] = $row['endereco'];
-        $index++;
-    }
+    // Adicionar pergunta e resposta ao array
+    $userId = uniqid();
+
+    $questionsAndAnswers[$userId]['pergunta_motherName'] = 'motherName';
+    $questionsAndAnswers[$userId]['resposta_motherName'] = $row['nomeMaterno'];
+
+    $questionsAndAnswers[$userId]['pergunta_birthDate'] = 'birthDate';
+    $questionsAndAnswers[$userId]['resposta_birthDate'] = $row['dataNasc'];
+
+    $questionsAndAnswers[$userId]['pergunta_addressZip'] = 'addressZip';
+    $questionsAndAnswers[$userId]['resposta_addressZip'] = $row['endereco'];
+}
 } else {
     echo "Nenhum resultado encontrado na tabela";
 }
@@ -36,13 +34,19 @@ if (!isset($_SESSION['login'])) {
 // Verifica se o formulário foi enviado
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Verifica as respostas
-    $isValid = true;
+    $isValid = false;
 
-    foreach ($questionsAndAnswers as $entry) {
-        $userAnswer = isset($_POST[$entry['pergunta']]) ? $_POST[$entry['pergunta']] : '';
+    foreach ($questionsAndAnswers as $userId => $entry) {
+        $userAnswerMotherName = isset($_POST['motherName']) ? $_POST['motherName'] : '';
+        $userAnswerBirthDate = isset($_POST['birthDate']) ? $_POST['birthDate'] : '';
+        $userAnswerAddressZip = isset($_POST['addressZip']) ? $_POST['addressZip'] : '';
 
-        if ($userAnswer !== $entry['resposta']) {
-            $isValid = false;
+        if (
+            trim(strtolower($userAnswerMotherName)) === trim(strtolower($entry['resposta_motherName'])) &&
+            trim(strtolower($userAnswerBirthDate)) === trim(strtolower($entry['resposta_birthDate'])) &&
+            trim(strtolower($userAnswerAddressZip)) === trim(strtolower($entry['resposta_addressZip']))
+        ) {
+            $isValid = true;
             break;
         }
     }
@@ -51,10 +55,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($isValid) {
         ob_clean();
         header('Location: home.php');
+
         exit();
-    } else {
-        // Se as respostas não são válidas, exibe uma mensagem de erro
-        echo "Respostas incorretas. Tente novamente.";
     }
 }
 ?>
@@ -130,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <main>              <!-- Main - Form -->
-        <form id="two-factor-form" method="$_POST" action="">
+        <form id="two-factor-form" method="post" action="">
             <h2 style="color: #ff3333; text-align: center;">Autenticação de Dois Fatores (2FA)</h2>
             <section id="motherNameSection">
                 <label for="motherName">Qual o nome da sua mãe?</label>
@@ -143,13 +145,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span class="error-message" id="birthDateError">Por favor, preencha este campo.</span>
             </section>
             <section id="addressZipSection">
-                <label for="addressZip">Qual o CEP do seu endereço?</label>
-                <input type="text" id="addressZip" name="addressZip" maxlength="9" onkeypress="checkEnter(event)" oninput="formatCEP(this)" required>
-                <span class="error-message" id="addressZipError">Por favor, preencha este campo com um CEP válido (XXXXX-XXX).</span>
+                <label for="addressZip">Qual o seu endereço?</label>
+                <input type="text" id="addressZip" name="addressZip" onkeypress="checkEnter(event)" required>
+                <span class="error-message" id="addressZipError">Por favor, preencha este campo com um Endereço válido.</span>
             </section>
             <button type="button" id="nextQuestion" onclick="showNextQuestion()">Próxima Pergunta</button>
-            <button id="authenticateButton" name="authenticateButton" type="submit" onclick="authenticate()">Autenticar</button>
+            <button id="authenticateButton" name="authenticateButton" type="submit">Autenticar</button>
         </form>
+        <div id="error-message-container" style="text-align: center; margin-top: 20px;">
+            <?php
+                if (isset($isValid) && !$isValid) {
+                    echo '<div id="error-message" style="color: #ff3333; font-size: 18px;">Respostas incorretas. Tente novamente.</div>';
+                }
+            ?>
+        </div>
     </main>
 
     <script>
@@ -187,11 +196,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        function authenticate() {
-            // Após a autenticação
-            alert("Usuário autenticado com sucesso!");
-        }
-
         // Inicialmente, esconde todas as perguntas exceto a primeira
         for (var i = 1; i < sections.length; i++) {
             sections[i].style.display = "none";
@@ -227,6 +231,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Atualiza o valor do campo
             input.value = formattedValue;
         }
+        
+        // Função para formatar a data no padrão americano antes de enviar o formulário
+        document.getElementById('two-factor-form').addEventListener('submit', function() {
+                var birthDateInput = document.getElementById('birthDate');
+                var birthDateValue = birthDateInput.value;
+
+                // Verifica se a data está no formato DD/MM/YYYY
+                if (/^\d{2}\/\d{2}\/\d{4}$/.test(birthDateValue)) {
+                    // Formata para o padrão americano YYYY-MM-DD
+                    var parts = birthDateValue.split('/');
+                    var formattedDate = parts[2] + '-' + parts[1] + '-' + parts[0];
+
+                    // Atualiza o valor do campo
+                    birthDateInput.value = formattedDate;
+                }
+            });
     </script>
 </body>
 </html>

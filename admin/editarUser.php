@@ -129,25 +129,25 @@
                 <legend><b>Editar Cliente</b></legend>
                 <br>
                 <div class="inputBox">
-                    <input type="text" name="nome" id="nome" class="inputUser" value=<?php echo $nome;?> required>
+                    <input type="text" name="nome" id="nome" class="inputUser" value="<?php echo $nome;?>" required>
                     <label for="nome" class="labelInput">Nome completo</label>
                 </div>
                 <br>
                 <label for="data_nascimento"><b>Data de Nascimento:</b></label>
-                <input type="date" name="dataNasc" id="dataNasc" value=<?php echo $dataNasc;?> required>
+                <input type="date" name="dataNasc" id="dataNasc" value="<?php echo $dataNasc;?>" required>
                 <br><br><br>
                 <div class="inputBox">
-                    <input type="password" name="senha" id="senha" class="inputUser" value=<?php echo $senha;?> required>
+                    <input type="password" name="senha" id="senha" class="inputUser" value="<?php echo $senha;?>" required>
                     <label for="senha" class="labelInput">Senha</label>
                 </div>
                 <br><br>
                 <div class="inputBox">
-                    <input type="text" name="login" id="login" class="inputUser" value=<?php echo $login;?> required>
+                    <input type="text" name="login" id="login" class="inputUser" value="<?php echo $login;?>" required>
                     <label for="login" class="labelInput">Login</label>
                 </div>
                 <br><br>
                 <div class="inputBox">
-                    <input type="text" name="celular" id="celular" class="inputUser" value=<?php echo $celular;?>>
+                    <input type="text" name="celular" id="celular" class="inputUser" value="<?php echo $celular;?>">
                     <label for="celular" class="labelInput">Celular</label>
                 </div>
                 <br>
@@ -164,7 +164,7 @@
                 <br>
                 <br>
                 <div class="inputBox">
-                    <input type="text" name="endereco" id="endereco" class="inputUser" value=<?php echo $endereco;?> required>
+                    <input type="text" name="endereco" id="endereco" class="inputUser" value="<?php echo $endereco;?>" required>
                     <label for="endereco" class="labelInput">Endereço</label>
                 </div>
                 <br><br>

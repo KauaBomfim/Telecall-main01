@@ -23,7 +23,7 @@
         {
             $_SESSION['login'] = $login;
             $_SESSION['senha'] = $senha;
-            header('Location: ../HTML/home.php');
+            header('Location: ../HTML/auten-2-fatores.php');
         }
     }
     else

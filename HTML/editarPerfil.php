@@ -4,15 +4,16 @@ session_start();
 
 if (isset($_SESSION['login'])) 
     {
-        $login_usuario = $_SESSION['login'];
         include_once('../php/config.php');
+        $login_usuario = $_SESSION['login'];
 
         // Usando prepared statement para evitar SQL injection
         $sqlSelect = "SELECT * FROM usuarios WHERE login = ?";
         $stmt = $conexao->prepare($sqlSelect);
         $stmt->bind_param("s", $login_usuario); // "s" indica que $login_usuario é uma string
         $stmt->execute();
-        $result = $stmt->get_result();
+        $result = mysqli_stmt_get_result($stmt);
+
 
         if($result->num_rows > 0)
         {
@@ -146,42 +147,42 @@ if (isset($_SESSION['login']))
                 <legend><b>Editar Cliente</b></legend>
                 <br>
                 <div class="inputBox">
-                    <input type="text" name="novo_nome" id="novo_nome" class="inputUser" value=<?php echo $nome_atual;?> required>
+                    <input type="text" name="novo_nome" id="novo_nome" class="inputUser" value="<?php echo $nome_atual;?>" required>
                     <label for="nome" class="labelInput">Nome completo</label>
                 </div>
                 <br>
                 <label for="data_nascimento"><b>Data de Nascimento:</b></label>
-                <input type="date" name="novo_dataNasc" id="novo_dataNasc" value=<?php echo $dataNasc_atual;?> required>
+                <input type="date" name="novo_dataNasc" id="novo_dataNasc" value="<?php echo $dataNasc_atual;?>" required>
                 <br><br><br>
                 <div class="inputBox">
-                    <input type="password" name="novo_senha" id="novo_senha" class="inputUser" value=<?php echo $senha_atual;?> required>
+                    <input type="password" name="novo_senha" id="novo_senha" class="inputUser" value="<?php echo $senha_atual;?>" required>
                     <label for="senha" class="labelInput">Senha</label>
                 </div>
                 <br><br>
                 <div class="inputBox">
-                    <input type="text" name="novo_login" id="novo_login" class="inputUser" value=<?php echo $login_atual;?> required>
+                    <input type="text" name="novo_login" id="novo_login" class="inputUser" value="<?php echo $login_atual;?>" required>
                     <label for="login" class="labelInput">Login</label>
                 </div>
                 <br><br>
                 <div class="inputBox">
-                    <input type="text" name="novo_celular" id="novo_celular" class="inputUser" value=<?php echo $celular_atual;?>>
+                    <input type="text" name="novo_celular" id="novo_celular" class="inputUser" value="<?php echo $celular_atual;?>">
                     <label for="celular" class="labelInput">Celular</label>
                 </div>
                 <br>
                 <p>Sexo:</p>
-                <input type="radio" id="feminino" name="novo_sexo" value="feminino" required>
+                <input type="radio" id="feminino" name="novo_sexo" value="feminino" <?php echo ($sexo_atual == 'feminino') ? 'checked' : '';?> required>
                 <label for="feminino">Feminino</label>
                 <br>
-                <input type="radio" id="masculino" name="novo_sexo" value="masculino" required>
+                <input type="radio" id="masculino" name="novo_sexo" value="masculino" <?php echo ($sexo_atual == 'masculino') ? 'checked' : '';?> required>
                 <label for="masculino">Masculino</label>
                 <br>
-                <input type="radio" id="outro" name="novo_sexo" value="outro" required>
+                <input type="radio" id="outro" name="novo_sexo" value="outro" <?php echo ($sexo_atual == 'outro') ? 'checked' : '';?> required>
                 <label for="outro">Outro</label>
                 <br><br>
                 <br>
                 <br>
                 <div class="inputBox">
-                    <input type="text" name="novo_endereco" id="novo_endereco" class="inputUser" value=<?php echo $endereco_atual;?> required>
+                    <input type="text" name="novo_endereco" id="novo_endereco" class="inputUser" value="<?php echo $endereco_atual;?>" required>
                     <label for="endereco" class="labelInput">Endereço</label>
                 </div>
                 <br><br>

@@ -14,6 +14,17 @@ include('../php/start.php');
         <script src="../js/script.js" defer></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
         <title>Cpaas - Telecall</title>
+
+        <style>
+            ::-webkit-scrollbar {
+            width: 7px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: rgb(0, 167, 218);
+        }
+
+        </style>
     </head>
     <body>
         <header class="cabeçalho_cpaas">

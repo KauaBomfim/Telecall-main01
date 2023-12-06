@@ -26,11 +26,12 @@ $result = $conexao->query($sql);
 ?>
 
 <main>
-    <section class="py-4 d-flex " id="box-adm">
+    <section class="py-4 d-flex px-4" id="box-adm">
         <div class="d-flex justify-content">
             <a href="registeradm.php"><button class="btn btn-success px-4 me-2">Criar Usuário</button></a>
             <a href="../HTML/home.php"><button class="btn btn-info px-2 me-2">Sair Administração</button></a>
-            <a href="../php/logout.php"><button type="submit" name="usuarios" value="logout" class="btn btn-danger px-4">Fazer Logout</button></a>
+            <a href="../php/logout.php"><button type="submit" name="usuarios" value="logout" class="btn btn-danger px-4 me-2">Fazer Logout</button></a>
+            <a href="#" onclick="gerarPDF()" class="btn btn-warning px-4 me-2">Imprimir PDF</a>
         </div>
         <div class="box-search mx-5 d-flex">
             <input type="search" class="form-control w-100" placeholder="Pesquisar" id="pesquisar">
@@ -42,14 +43,15 @@ $result = $conexao->query($sql);
         </div>
     </section>
     <section>
-        <div class="table-responsive">
+        <div id="container-tabela" class="table-responsive">
             <table class="table">
                 <thead class="table-secondary">
                     <tr>
+                        <th scope="col">ID</th>
                         <th scope="col">Nome</th>
                         <th scope="col">Data nascimento</th>
-                        <th scope="col">cpf</th>
-                        <th scope="col">celular</th>
+                        <th scope="col">CPF</th>
+                        <th scope="col">Celular</th>
                         <th scope="col">Login</th>
                         <th scope="col">Senha</th>
                         <th scope="col">Administrador</th>
@@ -61,6 +63,7 @@ $result = $conexao->query($sql);
                     <?php 
                     while($user_data = mysqli_fetch_assoc($result)) {
                         echo "<tr>";
+                         echo "<td>".$user_data['id']."</td>";
                         echo "<td>".$user_data['nome']."</td>";
                         echo "<td>".$user_data['dataNasc']."</td>";
                         echo "<td>".$user_data['cpf']."</td>";
@@ -82,6 +85,7 @@ $result = $conexao->query($sql);
                             </a>
                             </td>";
                         echo "</tr>";
+                        
                     }
                     ?>
 
@@ -103,12 +107,34 @@ $result = $conexao->query($sql);
                                 </div>
                             </div>
                         </div>
+
                         <!-- Fim modal -->
                 </tbody>
             </table>
         </div>
     </section>
 </main>
+
+<script src="https://rawgit.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
+
+<script>
+    function gerarPDF() {
+        var elemento = document.getElementById('container-tabela'); // Substitua 'container-tabela' pelo ID real do seu contêiner de tabela
+        var opcoes = {
+            margin: 10,
+            filename: 'usuarios-cadastrados.pdf', // Defina o nome do arquivo desejado aqui
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: {
+                scale: 2, // Ajuste a escala conforme necessário para evitar cortes
+                letterRendering: true
+            },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+        }
+
+        html2pdf(elemento, opcoes);
+    }
+</script>
+
 <script>
     var search = document.getElementById('pesquisar');
 

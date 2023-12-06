@@ -35,7 +35,7 @@ if(isset($_POST['cadastrarUser'])){
     <link rel="stylesheet" href="../CSS/register.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <script type="text/javascript" src="../js/script.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
     <script src="https://cdn.rawgit.com/igorescobar/jQuery-Mask-Plugin/master/src/jquery.mask.js"></script>
 </head>
@@ -47,7 +47,7 @@ if(isset($_POST['cadastrarUser'])){
         <a href="../HTML/home.php"><img src="../IMG/logotelecall.png" alt="logo da telecall" /></a>
     </header>
 
-    <form action="../php/config.php" method="post" autocomplete="on" id="form">        <!--Formulário-->
+    <form action="" method="post" autocomplete="on" id="form">        <!--Formulário-->
         <h1>Cadastro Telecall</h1>
 
         <div>       <!--Nome-->
@@ -88,10 +88,9 @@ if(isset($_POST['cadastrarUser'])){
 
         <div>       <!--CPF-->
             <label for="cpf" class="lbl-tittle">CPF</label> <br />
-            <input type="text" id="cpf" class="inputs required" name="cpf" placeholder="Somente números"
-                autocomplete="off" maxlength="14" oninput="cpfValidate()">
-            <span class="span-required">Insira um CPF válido. </span>
-            <span class="span-right">CPF Válido ✓</span>
+            <input type="text" id="cpf" class="input required" name="cpf" placeholder="Somente números"
+                autocomplete="off" maxlength="14" oninput="CPF()"> <br>
+                <span id="resposta"></span>
         </div>
 
         <div>       <!--Número de celular-->
@@ -273,22 +272,23 @@ if(isset($_POST['cadastrarUser'])){
         }
 
         function ApenasLetras(e, t) {   /* Validação para aceitar apenas caracteres alfabéticos no campo senha */
-    try {
-        if (window.event) {
-            var charCode = window.event.keyCode;
-        } else if (e) {
-            var charCode = e.which;
-        } else {
-            return true;
+            try {
+                if (window.event) {
+                    var charCode = window.event.keyCode;
+                } else if (e) {
+                    var charCode = e.which;
+                } else {
+                    return true;
+                }
+
+                if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123))
+                    return true;
+                else
+                    return false;
+            } catch (err) {
+                alert(err.Description);
+                }
         }
-        if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123))
-            return true;
-        else
-            return false;
-    } catch (err) {
-        alert(err.Description);
-    }
-}
 
         function senhaComparar() {   /*Validando a confirmação de senha*/
             if (campos[8].value == campos[9].value && campos[9].value.length >= 8) {
@@ -360,7 +360,7 @@ if(isset($_POST['cadastrarUser'])){
                 setError(8);
                 campos[8].focus();
             }
-            else if (campos[9].value == '' && campos[9] != campos[7]) {
+            else if (campos[9].value == '' && campos[9] != campos[8]) {
                 evento.preventDefault();
                 setError(9);
                 campos[9].focus();
@@ -446,6 +446,27 @@ if(isset($_POST['cadastrarUser'])){
                 icon2.classList.remove('hide');
             }
         }
+
+    function CPF(){"user_strict";function r(r){for(var t=null,n=0;9>n;++n)t+=r.toString().charAt(n)*(10-n);var i=t%11;return i=2>i?0:11-i}function t(r){for(var t=null,n=0;10>n;++n)t+=r.toString().charAt(n)*(11-n);var i=t%11;return i=2>i?0:11-i}var n="CPF Inválido",i="CPF Válido";this.gera=function(){for(var n="",i=0;9>i;++i)n+=Math.floor(9*Math.random())+"";var o=r(n),a=n+"-"+o+t(n+""+o);return a},this.valida=function(o){for(var a=o.replace(/\D/g,""),u=a.substring(0,9),f=a.substring(9,11),v=0;10>v;v++)if(""+u+f==""+v+v+v+v+v+v+v+v+v+v+v)return n;var c=r(u),e=t(u+""+c);return f.toString()===c.toString()+e.toString()?i:n}}
+
+
+    var CPF = new CPF();
+    document.write(CPF.valida("123.456.789-00"));
+    
+    document.write("<br> Utilizando o proprio gerador da lib<br><br><br>");
+    for(var i =0;i<40;i++) {
+        var temp_cpf = CPF.gera();
+        document.write(temp_cpf+" = "+CPF.valida(temp_cpf)+"<br>");
+    }
+
+    $(".input").keypress(function(){
+        $("#resposta").html(CPF.valida($(this).val()));
+    });
+
+    $(".input").blur(function(){
+        $("#resposta").html(CPF.valida($(this).val()));
+    });
+
     </script>
 </body>
 
